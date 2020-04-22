@@ -85,12 +85,43 @@ module Enumerable
         condition
     end
 
-    def my_none
-        # your code here
+    def my_none?
+        condition = true
+        self.my_each do |item|
+            if yield(item)
+                condition = false
+            end
+        end
+        condition
     end
 
-    def my_count
-        # your code here
+    def my_count(*args)
+        array = is_a?(Range) ? to_a : self
+        return array.length if !block_given? && args.empty?
+        number = 0
+        if block_given? 
+            num_elements = []
+            array.my_each do |item|
+                if yield(item) 
+                    num_elements << item
+                    number = num_elements.length
+                end
+            end
+        end
+        begin
+            
+        rescue => exception
+            
+        else
+            array.my_each do |item|
+                if !args.empty?
+                    if item == args[0]
+                        number += 1
+                    end
+                end
+            end
+        end
+        number 
     end
 
     def my_map
