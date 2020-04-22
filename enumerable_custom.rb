@@ -125,10 +125,36 @@ module Enumerable
     end
 
     def my_map
-        # your code here
+        if block_given?
+            map = []
+            if proc
+                my_each do |item|
+                    map << proc.call(item)
+                end
+            else
+                map << yield(item)
+            end
+        else
+            to_enum(:my_map) 
+        end
     end
 
-    def my_inject
-        # your code here
+    def my_inject(start = nil)
+        reducer = start if start.is_a?(Integer)
+        if block_given?
+            if start.nil?
+                start = self[0]
+            end
+            sum = start
+            self.my_each do |item|
+                sum = yield(sum, item)
+            end
+            sum
+        else
+            if start.is_a?(Symbol)
+                my_each {|item| reducer = reducer ? reducer.send(start, item) : item}
+            end
+            reducer
+        end
     end
 end
