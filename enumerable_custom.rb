@@ -10,7 +10,7 @@ module Enumerable
             
         rescue => exception 
         else
-            to_enum
+            to_enum(:my_each)
         end
     end
 
@@ -27,20 +27,62 @@ module Enumerable
             
         rescue => exception 
         else
-            to_enum
+            to_enum(:my_each_with_index)
         end
     end
     
-    def my_select
-        # your code here
+    def my_select(*)
+        if block_given?
+            array = []
+            my_each do |item|
+                if yield(item)
+                    array << item
+                end
+            end
+        end
+        begin
+            
+        rescue => exception 
+        else
+            to_enum(:my_select)
+        end
+        array
     end
 
-    def my_all
-        # your code here
+    def my_all?
+        if block_given?
+            condition = true
+            my_each do |item|
+                if yield(item) === false
+                    condition = false
+                end
+            end
+        end
+        begin
+            
+        rescue => exception 
+        else
+            to_enum(:my_all?)
+        end
+        condition
     end
 
-    def my_any
-        # your code here
+    def my_any?
+        if block_given?
+            condition = false
+            my_each do |item|
+                if yield(item) === true
+                    condition = true
+                end
+            end
+        end
+        begin
+            
+        rescue => exception 
+        else
+            to_enum(:my_any?)
+        end
+        condition
     end
 
     def my_none
@@ -58,10 +100,4 @@ module Enumerable
     def my_inject
         # your code here
     end
-end
-
-puts "\n My each_with_index demo"
-[1, 2, 3, 4].my_each_with_index do |e,i |
-  puts "item: #{e}"
-  puts "index: #{i}"
 end
