@@ -2,9 +2,7 @@ module Enumerable
   def my_each
     array = to_a
     if block_given?
-      array.each do |i|
-        yield(i)
-      end
+      array.each { |i| yield(i) }
     else
       to_enum(:my_each)
     end
@@ -26,9 +24,7 @@ module Enumerable
   def my_select(*)
     if block_given?
       array = []
-      my_each do |item|
-        array << item if yield(item)
-      end
+      my_each { |item| array << item if yield(item) }
     else
       to_enum(:my_select)
     end
@@ -38,9 +34,7 @@ module Enumerable
   def my_all?
     if block_given?
       condition = true
-      my_each do |item|
-        condition = false if yield(item) == false
-      end
+      my_each { |item| condition = false if yield(item) == false }
     else
       to_enum(:my_all?)
     end
@@ -50,9 +44,7 @@ module Enumerable
   def my_any?
     if block_given?
       condition = false
-      my_each do |item|
-        condition = true if yield(item) == true
-      end
+      my_each { |item| condition = true if yield(item) == true }
     else
       to_enum(:my_any?)
     end
@@ -61,11 +53,11 @@ module Enumerable
 
   def my_none?
     condition = true
-    my_each do |item|
-      condition = false if yield(item)
-    end
+    my_each { |item| condition = false if yield(item) }
     condition
   end
+
+  # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
   def my_count(*args)
     array = is_a?(Range) ? to_a : self
@@ -84,19 +76,18 @@ module Enumerable
       array.my_each do |item|
         unless args.empty?
           number += 1 if item == args[0]
-          end
+        end
       end
     end
     number
   end
 
+  # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
   def my_map
     if block_given?
       map = []
       if proc
-        my_each do |item|
-          map << proc.call(item)
-        end
+        my_each { |item| map << proc.call(item) }
       else
         map << yield(item)
       end
@@ -110,9 +101,7 @@ module Enumerable
     if block_given?
       start = self[0] if start.nil?
       sum = start
-      my_each do |item|
-        sum = yield(sum, item)
-      end
+      my_each { |item| sum = yield(sum, item) }
       sum
     else
       if start.is_a?(Symbol)
@@ -121,4 +110,8 @@ module Enumerable
       reducer
     end
   end
+end
+
+def multiply_els(array)
+  array.my_inject(:*)
 end
