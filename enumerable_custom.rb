@@ -1,14 +1,4 @@
 # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
-def check_all_args(arg)
-  if arg.class == Regexp
-    my_each { |item| return false if arg.match?(item.to_s) == false }
-  elsif arg.class == Class
-    my_each { |item| return false if item.is_a?(arg) == false }
-  else
-    my_all? { |item| item == arg }
-  end
-end
-
 module Enumerable
   def my_each
     return enum_for unless block_given?
@@ -41,13 +31,17 @@ module Enumerable
   end
 
   def my_all?(arg = nil)
-    return check_all_args(arg) unless arg.nil?
-
     condition = true
     if block_given?
       my_each { |item| condition = false if yield(item) == false }
+    elsif arg.is_a?(Class)
+      my_each { |item| condition = false if item.is_a?(arg) == false }
+    elsif arg.is_a?(Regexp)
+      my_each { |item| condition = false if arg.match?(item.to_s) == false }
+    elsif arg.nil? == false
+      my_each { |item| condition = false if item != arg }
     else
-      my_each { |item| condition = false if item.nil? || item == false }
+      my_each { |item| condition = false unless item }
     end
     condition
   end
@@ -86,16 +80,12 @@ module Enumerable
         end
       end
     else
-      array.my_each do |item|
-        unless args.empty?
-          number += 1 if item == args[0]
-        end
-      end
+      array.my_each { |i| number += 1 if i == args[0] } unless args.empty?
     end
     number
   end
 
-  def my_map(proc = nil)
+  def my_map(&proc)
     return to_enum(:my_map) unless block_given?
 
     map = []
@@ -105,7 +95,11 @@ module Enumerable
 
   def my_inject(*args)
     reducer = args[0] if args[0].is_a?(Integer)
-    if block_given?
+    if block_given? && args[0].is_a?(Integer)
+      total = args[0]
+      my_each { |item| total = yield(total, item) }
+      total
+    elsif block_given?
       total = 0
       my_each { |item| total = yield(total, item) }
       total
