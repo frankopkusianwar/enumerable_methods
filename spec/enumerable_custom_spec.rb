@@ -49,11 +49,11 @@ describe Enumerable do
       expect([1, 2, nil].my_all?).to eql(false)
     end
 
-    it 'should return true when a class is passed as an argument  and when all of the collection is a member of such class' do
+    it 'should return true when a class is passed as an argument and when all elements are members of such class' do
       expect(arr.my_all?(Integer)).to eql(true)
     end
 
-    it 'should return false a class is passed as an argument  and when all of the collection is not a member of such class' do
+    it 'should return false if an element does not belong to the class that is given as an argument' do
       expect([1, 2, nil].my_all?(Integer)).to eql(false)
     end
 
@@ -61,23 +61,23 @@ describe Enumerable do
       expect(words.my_all?(/d/)).to eql(true)
     end
 
-    it 'should return false when a Regex is passed as an argument and when all of the collection does not match the Regex' do
+    it 'should return false when a Regex is given and when all of the collection does not match the Regex' do
       expect(words.my_all?(/t/)).to eql(false)
     end
 
-    it 'should return true when a pattern other than Regex or a Class is given,  when all of the collection matches the pattern' do
+    it 'should return true when a pattern other than Regex or a Class are given if all elements match the pattern' do
       expect([3, 3, 3].my_all?(3)).to eql(true)
     end
 
-    it 'should return false when a pattern other than Regex or a Class is given,  when all of the collection does not match the pattern' do
+    it 'should return false if none element matches the given pattern(neither Regex or Class)' do
       expect([3, 3, 3].my_all?(1)).to eql(false)
     end
 
-    it 'it should return true when the block is not given, adds an implicit block when at least one of the collection members is not false or nil.)' do
+    it 'it should return true when the block is not given and if all elements are not nil or false' do
       expect([3, 3, 3].my_all?).to eql(true)
     end
 
-    it 'it should return true when the block is not given, adds an implicit block when at least one of the collection members is not false or nil.)' do
+    it 'it should return true when the block is not given, if one of the elements are either nil or false' do
       expect([3, 3, nil].my_all?).to eql(false)
     end
   end
@@ -95,27 +95,27 @@ describe Enumerable do
       expect([false, false, nil].my_any?).to eql(false)
     end
 
-    it 'should return true when a class is passed as an argument  and when at least one of the collection is a member of such class' do
+    it 'should return true when a class is given and when at least one element is a member of such class' do
       expect([1, 'demo', false].my_any?(Integer)).to eql(true)
     end
 
-    it 'should return false when a class is passed as an argument  and when at least one of the collection is not a member of such class' do
+    it 'should return false when a class is given and when at least one of the elements is not a member of the class' do
       expect(['demo', false, nil].my_any?(Integer)).to eql(false)
     end
 
-    it 'should return false when a Regex is passed as an argument and when none of the collection matches the Regex' do
+    it 'should return false when a Regex given and when none of the collection matches the Regex' do
       expect(words.my_any?(/t/)).to eql(false)
     end
 
-    it 'should return true when a Regex is passed as an argument and when atleast one of the collection matches the Regex' do
+    it 'should return true when a Regex is given and when atleast one of the collection matches the Regex' do
       expect(words.my_any?(/d/)).to eql(true)
     end
 
-    it 'should return false when a pattern other than Regex or a Class is given and when none of the collection matches the pattern' do
+    it 'should return false when a pattern other than Regex or a Class is given and if no element matches the pattern' do
       expect([1, 2, 2].my_any?(3)).to eql(false)
     end
 
-    it 'should return true when a pattern other than Regex or a Class is given and when at leats one of the collection matches the pattern' do
+    it 'should return true when a pattern(neither Regex or a Class) is given and at least one element matches' do
       expect(arr.my_any?(3)).to eql(true)
     end
   end
@@ -129,11 +129,11 @@ describe Enumerable do
       expect([1, 'demo', 2.2].my_none?).to eql(false)
     end
 
-    it 'should return true when a class is passed as an argument and if none of the collection is a member of such class' do
+    it 'should return true when a class is given and if none of the collection is a member of such class' do
       expect(arr.my_none?(String)).to eql(true)
     end
 
-    it 'should return false when a class is passed as an argument and if one of the collection is a member of such class' do
+    it 'should return false when a class is given and if one of the collection is a member of such class' do
       expect(words.my_none?(String)).to eql(false)
     end
 
@@ -145,11 +145,11 @@ describe Enumerable do
       expect(words.my_none?(/d/)).to eql(false)
     end
 
-    it 'returns true only if none of the collection matches the pattern when a pattern other than Regex or a Class is given as an argument' do
+    it 'returns true only if none of the collection matches the pattern (neither Regex or a Class)' do
       expect([1, 2, 4].my_none?(3)).to eql(true)
     end
 
-    it 'returns false if one of the collection matches the pattern when a pattern other than Regex or a Class is given as an argument' do
+    it 'returns false if one of the collection matches the pattern when a pattern (neither Regex or a Class)' do
       expect(arr.my_none?(3)).to eql(false)
     end
   end
@@ -179,7 +179,7 @@ describe Enumerable do
   end
 
   describe '#my_inject' do
-    it 'returns the result of a binary operation of the elements in the enumerator specified by a given block, if no argument is given' do
+    it 'returns the result of a binary operation of the elements in the enumerator specified by a given block' do
       expect(arr.my_inject { |acc, item| acc + item }).to eql(6)
     end
 
@@ -187,7 +187,7 @@ describe Enumerable do
       expect(arr.my_inject(:+)).to eql(6)
     end
 
-    it 'returns the result of a binary operation of the elements in the enumerator with the element provided in the argument as the first of the operation that is specified by a given block' do
+    it 'returns the result of a binary operation of the elements in the enumerator using the argument in the operation' do
       expect(arr.my_inject(1) { |acc, item| acc + item }).to eql(7)
     end
 

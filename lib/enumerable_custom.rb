@@ -33,7 +33,6 @@ module Enumerable
   end
 
   def my_all?(arg = nil)
-    condition = true
     if block_given?
       my_each { |item| return false if yield(item) == false }
     elsif arg.is_a?(Regexp)
