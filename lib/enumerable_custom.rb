@@ -9,7 +9,7 @@ module Enumerable
       yield(array[i])
       i += 1
     end
-    return self
+    self
   end
 
   def my_each_with_index
@@ -21,7 +21,7 @@ module Enumerable
       yield(array[i], i)
       i += 1
     end
-    return self
+    self
   end
 
   def my_select(*)
@@ -120,5 +120,3 @@ end
 def multiply_els(array)
   array.my_inject(:*)
 end
-
-p [3, 3, 3].my_all?(Integer)
