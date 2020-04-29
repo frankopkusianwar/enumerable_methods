@@ -35,17 +35,17 @@ module Enumerable
   def my_all?(arg = nil)
     condition = true
     if block_given?
-      my_each { |item| condition = false if yield(item) == false }
-    elsif arg.is_a?(Class)
-      my_each { |item| condition = false if item.is_a?(arg) == false }
+      my_each { |item| return false if yield(item) == false }
     elsif arg.is_a?(Regexp)
-      my_each { |item| condition = false if arg.match?(item.to_s) == false }
+      my_each { |item| return false if arg.match?(item.to_s) == false }
+    elsif arg.is_a?(Class)
+      my_each { |item| return false if item.is_a?(arg) == false }
     elsif arg.nil? == false
-      my_each { |item| condition = false if item != arg }
+      my_each { |item| return false if item != arg }
     else
-      my_each { |item| condition = false unless item }
+      my_each { |item| return false unless item }
     end
-    condition
+    true
   end
 
   def my_any?(arg = nil)
@@ -121,4 +121,4 @@ def multiply_els(array)
   array.my_inject(:*)
 end
 
-p [1,2,3].my_select
+p [3, 3, 3].my_all?(Integer)
